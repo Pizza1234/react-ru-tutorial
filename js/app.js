@@ -1,149 +1,157 @@
 //Использование state стр.70
 var my_news = [
-    {
-        author: 'Саша Печкин',
-        text: 'В четчерг, четвертого числа...',
-        bigText: 'в четыре с четвертью часа четыре чёрненьких чумазеньких чертёнка чертили чёрными чернилами чертёж.'
-    },
-    {
-        author:  'Просто Вася',
-        text: 'Считаю, что $ должен стоить 35 рублей!',
-        bigText: 'А евро 42!'
-    },
-    {
-        author:  'Гость',
-        text: 'Бесплатно. Скачать. Лучший сайт - http://localhost:3000',
-        bigText: 'На самом деле платно, просто нужно прочитать очень длинное лицензионное соглашение'
-    }
+  {
+    author: 'Саша Печкин',
+    text: 'В четчерг, четвертого числа...',
+    bigText: 'в четыре с четвертью часа четыре чёрненьких чумазеньких чертёнка чертили чёрными чернилами чертёж.'
+  },
+  {
+    author: 'Просто Вася',
+    text: 'Считаю, что $ должен стоить 35 рублей!',
+    bigText: 'А евро 42!'
+  },
+  {
+    author: 'Гость',
+    text: 'Бесплатно. Скачать. Лучший сайт - http://localhost:3000',
+    bigText: 'На самом деле платно, просто нужно прочитать очень длинное лицензионное соглашение'
+  }
 ];
 var Article = React.createClass({
-    propTypes: {
-        data: React.PropTypes.shape({
-            author: React.PropTypes.string.isRequired,
-            text: React.PropTypes.string.isRequired,
-            bigText: React.PropTypes.string.isRequired
-        })
-    },
-    getInitialState: function() {
-        return {
-            visible: false
-        };
-    },
-    readmoreClick: function(e) {
-        e.preventDefault();
-        this.setState({visible: true});
-    },
-    render: function() {
-        var author = this.props.data.author,
-            text = this.props.data.text,
-            bigText = this.props.data.bigText,
-            visible = this.state.visible; // считываем значение переменной из состояния компонента
+  propTypes: {
+    data: React.PropTypes.shape({
+      author: React.PropTypes.string.isRequired,
+      text: React.PropTypes.string.isRequired,
+      bigText: React.PropTypes.string.isRequired
+    })
+  },
+  getInitialState: function () {
+    return {
+      visible: false
+    };
+  },
+  readmoreClick: function (e) {
+    e.preventDefault();
+    this.setState({visible: true});
+  },
+  render: function () {
+    var author = this.props.data.author,
+        text = this.props.data.text,
+        bigText = this.props.data.bigText,
+        visible = this.state.visible; // считываем значение переменной из состояния компонента
 
-        return (
-            <div className='article'>
-                <p className='news__author'>{author}:</p>
-                <p className='news__text'>{text}</p>
+    return (
+        <div className='article'>
+          <p className='news__author'>{author}:</p>
+          <p className='news__text'>{text}</p>
 
-                {/* для ссылки readmore: не показывай ссылку, если visible === true */}
-                <a href="#"
-                   onClick={this.readmoreClick}
-                   className={'news__readmore ' + (visible ? 'none' : '')}>
-                    Подробнее
-                </a>
+          {/* для ссылки readmore: не показывай ссылку, если visible === true */}
+          <a href="#"
+             onClick={this.readmoreClick}
+             className={'news__readmore ' + (visible ? 'none' : '')}>
+            Подробнее
+          </a>
 
-                {/* для большо текста: не показывай текст, если visible === false */}
-                <p className={'news__big-text ' + (visible ? '' : 'none')}>{bigText}</p>
+          {/* для большо текста: не показывай текст, если visible === false */}
+          <p className={'news__big-text ' + (visible ? '' : 'none')}>{bigText}</p>
 
-            </div>
-        )
-    }
+        </div>
+    )
+  }
 });
 var News = React.createClass({
-    propTypes: {
-        data: React.PropTypes.array.isRequired
-    },
-    getInitialState: function() {
-        return {
-            counter: 0
-        };
-    },
-    render: function() {
-        var data = this.props.data;
-        var newsTemplate;
-        if (data.length > 0) {
-            newsTemplate = data.map(function (item, index) {
-                return (
-                    <div key={index}>
-                        <Article data={item}/>
-                    </div>
-                )
-            })
-        } else {
-            newsTemplate = <p>К сожалению новостей нет</p>
-        }
-
+  propTypes: {
+    data: React.PropTypes.array.isRequired
+  },
+  getInitialState: function () {
+    return {
+      counter: 0
+    };
+  },
+  render: function () {
+    var data = this.props.data;
+    var newsTemplate;
+    if (data.length > 0) {
+      newsTemplate = data.map(function (item, index) {
         return (
-            <div className='news'>
-                {newsTemplate}
-                <strong className={'news__count ' + (data.length > 0 ? '' : 'none')  }>
-                    Всего новостей: {data.length}
-                </strong>
+            <div key={index}>
+              <Article data={item}/>
             </div>
-        );
+        )
+      })
+    } else {
+      newsTemplate = <p>К сожалению новостей нет</p>
     }
+
+    return (
+        <div className='news'>
+          {newsTemplate}
+          <strong className={'news__count ' + (data.length > 0 ? '' : 'none')  }>
+            Всего новостей: {data.length}
+          </strong>
+        </div>
+    );
+  }
 });
 var Add = React.createClass({
-    componentDidMount: function () {
-        ReactDOM.findDOMNode(this.refs.author).focus();
-    },
-    onCheckRuleClick: function (e) {
-        ReactDOM.findDOMNode(this.refs.alert_button).disabled = !e.target.checked;
-    },
-    onBtnClickHandler: function (e) {
-        e.preventDefault();
-    },
-
-    render: function () {
-        return (
-            <form className='add cf'>
-                <input
-                    type='text'
-                    className='add__author'
-                    defaultValue=''
-                    placeholder='Ваше имя'
-                    ref='author'
-                />
-                <textarea
-                    className='add__text'
-                    defaultValue=''
-                    placeholder='Текст новости'
-                    ref='text'
-                ></textarea>
-                <label className='add__checkrule'>
-                    <input type='checkbox' defaultChecked={false} ref='checkrule' onChange={this.onCheckRuleClick}/>
-                    Я согласен с правилами
-                </label>
-                <button
-                    className='add__btn'
-                    onClick={this.onBtnClickHandler}
-                    ref='alert_button'
-                    disabled>
-                    Показать alert
-                </button>
-            </form>
-        );
-    }
+  getInitialState: function () { // устанавливаем начальное состояние (state)
+    return {
+      btnIsDisabled: true
+    };
+  },
+  componentDidMount: function () {
+    ReactDOM.findDOMNode(this.refs.author).focus();
+  },
+  onBtnClickHandler: function (e) {
+    e.preventDefault();
+    var author = ReactDOM.findDOMNode(this.refs.author).value;
+    var text = ReactDOM.findDOMNode(this.refs.text).value;
+    alert(author + '\n' + text);
+  },
+  onCheckRuleClick: function (e) {
+    this.setState({btnIsDisabled: !this.state.btnIsDisabled}); //устанавливаем значение в state
+  },
+  render: function () {
+    return (
+        <form className='add	cf'>
+          <input
+              type='text'
+              className='add__author'
+              defaultValue=''
+              placeholder='Ваше	имя'
+              ref='author'
+          />
+          <textarea
+              className='add__text'
+              defaultValue=''
+              placeholder='Текст	новости'
+              ref='text'
+          ></textarea>
+          <label className='add__checkrule'>
+            <input type='checkbox' ref='checkrule' onChange={this.onCheckRuleClick}/>
+            Я согласен с правилами
+          </label>
+          {/* берем значение для disabled атрибута из state */}
+          <button
+              className='add__btn'
+              onClick={this.onBtnClickHandler}
+              ref='alert_button'
+              disabled={this.state.btnIsDisabled}>
+            Показать alert
+          </button>
+        </form>
+    );
+  }
 });
 var App = React.createClass({
-    render: function() {
-        return (
-            <div className='app'>
-                <h3>Новости</h3>
-                <Add />
-                <News data={my_news}/>
-            </div>
-        );
-    }
+  render: function () {
+    return (
+        <div className='app'>
+          <h3>Новости</h3>
+          <Add />
+          <News data={my_news}/>
+        </div>
+    );
+  }
 });
 ReactDOM.render(
     <App />,
